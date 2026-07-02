@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather Tavira — Documentação</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+    :root {
+      --blue: #2563eb; --blue-light: #dbeafe; --blue-dark: #1e40af;
+      --green: #16a34a; --green-light: #dcfce7;
+      --amber: #d97706; --amber-light: #fef3c7;
+      --red: #dc2626; --red-light: #fee2e2;
+      --gray-50: #f9fafb; --gray-100: #f3f4f6; --gray-200: #e5e7eb;
+      --gray-400: #9ca3af; --gray-600: #4b5563; --gray-800: #1f2937; --gray-900: #111827;
+      --radius: 10px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--gray-50);
+      color: var(--gray-800);
+      line-height: 1.65;
+      font-size: 15px;
+    }
+
+    /* ── Cover ── */
+    .cover {
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 60%, #0f172a 100%);
+      color: #fff;
+      padding: 64px 48px 56px;
+      position: relative;
+      overflow: hidden;
+    }
+    .cover::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 70% 40%, rgba(79,195,247,0.18) 0%, transparent 60%);
+    }
+    .cover-inner { position: relative; max-width: 820px; margin: 0 auto; }
+    .cover-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(79,195,247,0.15); border: 1px solid rgba(79,195,247,0.35);
+      color: #7dd3fc; font-size: 0.78rem; font-weight: 600;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 5px 14px; border-radius: 999px; margin-bottom: 24px;
+    }
+    .cover h1 { font-size: 2.4rem; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 12px; }
+    .cover h1 span { color: #7dd3fc; }
+    .cover-sub { font-size: 1rem; color: rgba(255,255,255,0.6); margin-bottom: 36px; max-width: 540px; }
+    .cover-links { display: flex; flex-wrap: wrap; gap: 12px; }
+    .cover-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2);
+      color: #fff; font-size: 0.85rem; padding: 8px 16px;
+      border-radius: 8px; text-decoration: none;
+    }
+    .cover-link:hover { background: rgba(255,255,255,0.14); }
+    .cover-meta {
+      margin-top: 40px; padding-top: 28px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      display: flex; flex-wrap: wrap; gap: 32px;
+    }
+    .cover-meta-item { font-size: 0.82rem; color: rgba(255,255,255,0.5); }
+    .cover-meta-item strong { display: block; color: rgba(255,255,255,0.85); font-weight: 500; margin-bottom: 2px; }
+
+    /* ── Layout ── */
+    .doc { max-width: 820px; margin: 0 auto; padding: 48px 32px 80px; }
+
+    /* ── Section ── */
+    .section { margin-bottom: 52px; }
+    .section-header {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 24px; padding-bottom: 14px;
+      border-bottom: 2px solid var(--gray-200);
+    }
+    .section-num {
+      width: 32px; height: 32px; border-radius: 8px;
+      background: var(--blue); color: #fff;
+      font-size: 0.85rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .section-title { font-size: 1.25rem; font-weight: 700; color: var(--gray-900); }
+
+    /* ── Callouts ── */
+    .callout {
+      border-left: 4px solid;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 14px 18px; margin: 18px 0;
+      font-size: 0.9rem;
+    }
+    .callout-title { font-weight: 600; margin-bottom: 4px; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.06em; }
+    .callout.info    { border-color: var(--blue);  background: var(--blue-light);  color: var(--blue-dark); }
+    .callout.success { border-color: var(--green); background: var(--green-light); color: #166534; }
+    .callout.warning { border-color: var(--amber); background: var(--amber-light); color: #92400e; }
+    .callout.danger  { border-color: var(--red);   background: var(--red-light);   color: #991b1b; }
+
+    /* ── Steps ── */
+    .steps { display: flex; flex-direction: column; gap: 12px; margin: 18px 0; }
+    .step { display: flex; gap: 16px; align-items: flex-start; }
+    .step-num {
+      width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
+      background: var(--blue); color: #fff;
+      font-size: 0.78rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      margin-top: 2px;
+    }
+    .step-body { font-size: 0.92rem; }
+    .step-body strong { display: block; margin-bottom: 2px; }
+    .step-body span { color: var(--gray-600); font-size: 0.87rem; }
+
+    /* ── Code ── */
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.83rem;
+      background: var(--gray-100); border: 1px solid var(--gray-200);
+      border-radius: 5px; padding: 2px 7px; color: var(--blue-dark);
+    }
+    pre {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      background: var(--gray-900); color: #e2e8f0;
+      border-radius: var(--radius); padding: 18px 20px;
+      overflow-x: auto; margin: 14px 0; line-height: 1.7;
+    }
+    pre .comment { color: #64748b; }
+    pre .key     { color: #7dd3fc; }
+    pre .val     { color: #86efac; }
+
+    /* ── Table ── */
+    table { width: 100%; border-collapse: collapse; margin: 18px 0; font-size: 0.88rem; }
+    th { background: var(--gray-100); font-weight: 600; text-align: left; padding: 10px 14px; border-bottom: 2px solid var(--gray-200); }
+    td { padding: 10px 14px; border-bottom: 1px solid var(--gray-100); vertical-align: top; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: var(--gray-50); }
+
+    /* ── Status badges ── */
+    .badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 0.75rem; font-weight: 600; padding: 2px 9px;
+      border-radius: 999px; white-space: nowrap;
+    }
+    .badge.ok      { background: var(--green-light); color: #166534; }
+    .badge.warn    { background: var(--amber-light); color: #92400e; }
+    .badge.fixed   { background: var(--blue-light);  color: var(--blue-dark); }
+    .badge.info    { background: var(--gray-100);    color: var(--gray-600); }
+
+    /* ── Architecture diagram ── */
+    .arch {
+      background: var(--gray-900); color: #e2e8f0;
+      border-radius: var(--radius); padding: 28px 24px; margin: 18px 0;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; line-height: 2;
+    }
+    .arch .box  { color: #7dd3fc; }
+    .arch .arr  { color: #64748b; }
+    .arch .api  { color: #86efac; }
+    .arch .file { color: #fcd34d; }
+
+    h3 { font-size: 1rem; font-weight: 600; color: var(--gray-900); margin: 24px 0 10px; }
+    p  { margin-bottom: 12px; }
+    ul { margin: 10px 0 14px 20px; }
+    li { margin-bottom: 5px; font-size: 0.92rem; }
+
+    /* ── Print ── */
+    @media print {
+      .cover { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .callout { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+
+    @media (max-width: 600px) {
+      .cover { padding: 40px 24px; }
+      .cover h1 { font-size: 1.7rem; }
+      .doc { padding: 32px 20px 60px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════ CAPA ══════════ -->
+<div class="cover">
+  <div class="cover-inner">
+    <div class="cover-badge">🌤 Documentação Técnica</div>
+    <h1>Weather <span>Tavira</span></h1>
+    <p class="cover-sub">Widget meteorológico em tempo real com temperatura do ar, temperatura da água do mar e previsão para 7 dias. Construído com Node.js + Express e integrado com OpenWeather e Open-Meteo.</p>
+
+    <div class="cover-links">
+      <a class="cover-link" href="https://web-production-9aff6.up.railway.app" target="_blank">🌐 Versão Online (Railway)</a>
+      <a class="cover-link" href="https://github.com/diogohomem/-weather-tavira" target="_blank">📁 Repositório GitHub</a>
+    </div>
+
+    <div class="cover-meta">
+      <div class="cover-meta-item"><strong>Versão</strong>1.0 — Estável</div>
+      <div class="cover-meta-item"><strong>Data</strong>Julho 2026</div>
+      <div class="cover-meta-item"><strong>Stack</strong>Node.js · Express · HTML/CSS/JS</div>
+      <div class="cover-meta-item"><strong>APIs</strong>OpenWeather · Open-Meteo Marine</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ DOCUMENTO ══════════ -->
+<div class="doc">
+
+  <!-- ── 1. FUNCIONAMENTO ── -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <div class="section-title">Informações e Instruções de Funcionamento</div>
+    </div>
+
+    <p>O <strong>Weather Tavira</strong> é uma aplicação web meteorológica que apresenta as condições atuais e a previsão para 7 dias em Tavira (Algarve, Portugal). Está disponível em <strong>duas modalidades</strong>: versão online e versão local.</p>
+
+    <div class="callout success">
+      <div class="callout-title">✅ Versão Online — Recomendada</div>
+      Acesso imediato via browser, sem instalar nada.<br>
+      <strong>URL:</strong> <a href="https://web-production-9aff6.up.railway.app" target="_blank">https://web-production-9aff6.up.railway.app</a>
+    </div>
+
+    <h3>Páginas disponíveis</h3>
+    <table>
+      <tr><th>Página</th><th>URL (online)</th><th>Descrição</th></tr>
+      <tr><td><strong>Widget Principal</strong></td><td><code>/</code></td><td>Mostra o widget de embed com temperatura do ar, temperatura da água e previsão 7 dias</td></tr>
+      <tr><td><strong>Dashboard Completo</strong></td><td><code>/dashboard.html</code></td><td>Painel detalhado: temperatura, humidade, vento, pressão, previsão horária e semanal. Permite pesquisar qualquer cidade do mundo</td></tr>
+      <tr><td><strong>Widget Embed</strong></td><td><code>/widget.html</code></td><td>Versão standalone do widget para incorporar noutros sites via iframe</td></tr>
+    </table>
+
+    <h3>Como usar o Widget em outro site (Embed)</h3>
+    <p>Na página principal, clica em <strong>"Copiar código"</strong> — o código abaixo é copiado para a área de transferência e pode ser colado em qualquer site HTML:</p>
+    <pre>&lt;iframe
+  src="https://web-production-9aff6.up.railway.app/widget.html"
+  width="320" height="520"
+  style="border:none;border-radius:16px"
+  loading="lazy"&gt;&lt;/iframe&gt;</pre>
+
+    <h3>Iniciar a versão local (requer Node.js instalado)</h3>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong>Abrir o Terminal na pasta do projeto</strong>
+          <span>Mac: clicar com o botão direito na pasta "Weather Tavira" → "Novo Terminal na Pasta"</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>Instalar dependências (apenas uma vez)</strong>
+          <span>Escrever no Terminal: <code>npm install</code></span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong>Iniciar o servidor</strong>
+          <span>Escrever: <code>npm run dev</code> — o browser abre automaticamente em <code>http://localhost:3000</code></span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <strong>Manter o Terminal aberto</strong>
+          <span>O servidor fica ativo enquanto o Terminal estiver em execução.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout warning">
+      <div class="callout-title">⚠️ Nota importante — versão local</div>
+      O ficheiro <code>.env</code> na raiz do projeto contém a chave da API. Deve estar presente para o servidor funcionar. Se não existir, o servidor encerra automaticamente com uma mensagem de erro clara.
+    </div>
+  </div>
+
+  <!-- ── 2. ARQUITETURA E ERROS ── -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <div class="section-title">Arquitetura, Erros e Comportamento Esperado</div>
+    </div>
+
+    <h3>Diagrama de Arquitetura</h3>
+    <div class="arch">
+      <span class="file">Browser (utilizador)</span><br>
+      <span class="arr">      │</span><br>
+      <span class="arr">      ▼ pedido HTTP</span><br>
+      <span class="box">┌──────────────────────────────────┐</span><br>
+      <span class="box">│   Servidor Node.js + Express      │  ← porta 3000 (local) ou Railway (online)</span><br>
+      <span class="box">│   server.js                       │</span><br>
+      <span class="box">│   ├── /api/weather       (proxy)  │</span><br>
+      <span class="box">│   ├── /api/widget-data   (proxy)  │</span><br>
+      <span class="box">│   └── /public/*          (static) │</span><br>
+      <span class="box">└──────────────────────────────────┘</span><br>
+      <span class="arr">      │                    │</span><br>
+      <span class="arr">      ▼                    ▼</span><br>
+      <span class="api">OpenWeather API      Open-Meteo Marine API</span><br>
+      <span class="arr">(chave API protegida) (gratuita, sem chave)</span>
+    </div>
+
+    <h3>Ficheiros do projeto</h3>
+    <table>
+      <tr><th>Ficheiro</th><th>Função</th></tr>
+      <tr><td><code>server.js</code></td><td>Servidor Express — faz proxy das APIs externas e serve os ficheiros estáticos</td></tr>
+      <tr><td><code>public/index.html</code></td><td>Página inicial com o widget em iframe e código de embed</td></tr>
+      <tr><td><code>public/dashboard.html</code></td><td>Painel meteorológico completo com pesquisa de cidades</td></tr>
+      <tr><td><code>public/widget.html</code></td><td>Widget standalone para embed externo</td></tr>
+      <tr><td><code>public/app.js</code></td><td>Lógica do dashboard — fetch dos dados, renderização, auto-refresh</td></tr>
+      <tr><td><code>public/style.css</code></td><td>Design system completo — glassmorphism, temas dinâmicos por condição meteorológica</td></tr>
+      <tr><td><code>.env</code></td><td>Chave API (não incluído no GitHub — apenas na versão local)</td></tr>
+      <tr><td><code>Procfile</code></td><td>Instrução de arranque para Railway</td></tr>
+    </table>
+
+    <h3>Comportamento esperado e situações comuns</h3>
+    <table>
+      <tr><th>Situação</th><th>Causa</th><th>O que acontece</th><th>O que fazer</th></tr>
+      <tr>
+        <td>Primeira visita à versão online demora 10-15 seg</td>
+        <td>Railway "adormece" o servidor após inatividade (plano gratuito)</td>
+        <td>Ecrã de carregamento momentâneo — dados aparecem em seguida</td>
+        <td>Aguardar — é normal. Visitas seguintes são imediatas</td>
+      </tr>
+      <tr>
+        <td><em>"Servidor não iniciado"</em> ao abrir ficheiro local</td>
+        <td><code>index.html</code> aberto diretamente sem servidor</td>
+        <td>Página de ajuda com instruções de arranque</td>
+        <td>Correr <code>npm run dev</code> no Terminal e abrir <code>http://localhost:3000</code></td>
+      </tr>
+      <tr>
+        <td>Widget mostra <em>"Não foi possível carregar"</em></td>
+        <td>API externa sem resposta ou timeout (8 seg)</td>
+        <td>Mensagem de erro com código HTTP</td>
+        <td>Verificar ligação à internet; recarregar a página</td>
+      </tr>
+      <tr>
+        <td>Temperatura da água mostra <em>"—"</em></td>
+        <td>API Marine sem dados para esse período</td>
+        <td>Traço em vez de temperatura</td>
+        <td>Normal em determinadas épocas — dado indisponível na fonte</td>
+      </tr>
+      <tr>
+        <td>Dashboard mostra cidade errada após pesquisa</td>
+        <td>Cidade não encontrada na OpenWeather</td>
+        <td>Mensagem de erro vermelha no topo</td>
+        <td>Tentar nome em inglês ou adicionar país (ex: <code>Faro, PT</code>)</td>
+      </tr>
+      <tr>
+        <td><em>"O pedido demorou demasiado"</em></td>
+        <td>Timeout de 10 seg excedido (sem internet ou API lenta)</td>
+        <td>Mensagem de erro clara no ecrã</td>
+        <td>Verificar ligação à internet e recarregar</td>
+      </tr>
+    </table>
+
+    <h3>Mecanismos de proteção implementados</h3>
+    <ul>
+      <li><strong>Timeout de 8 segundos</strong> em todas as chamadas a APIs externas — o servidor não fica "pendurado" indefinidamente</li>
+      <li><strong>Timeout de 10 segundos</strong> no cliente — mostra mensagem clara se o servidor demorar</li>
+      <li><strong>Verificação de resposta</strong> antes de processar dados — erros da API são comunicados claramente</li>
+      <li><strong>Temperatura da água "best effort"</strong> — se a API Marine falhar, o resto da app continua a funcionar normalmente</li>
+      <li><strong>Auto-refresh automático</strong> — widget atualiza de 15 em 15 minutos; dashboard de 10 em 10 minutos</li>
+    </ul>
+  </div>
+
+  <!-- ── 3. REQUISITOS ── -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div class="section-title">Requisitos para Utilização</div>
+    </div>
+
+    <h3>Versão Online (recomendada)</h3>
+    <table>
+      <tr><th>Requisito</th><th>Estado</th><th>Notas</th></tr>
+      <tr><td>Browser moderno</td><td><span class="badge ok">✓ Obrigatório</span></td><td>Chrome, Firefox, Safari, Edge — qualquer versão recente</td></tr>
+      <tr><td>Ligação à internet</td><td><span class="badge ok">✓ Obrigatório</span></td><td>Para carregar dados meteorológicos em tempo real</td></tr>
+      <tr><td>Node.js</td><td><span class="badge info">Não necessário</span></td><td>O servidor corre no Railway</td></tr>
+      <tr><td>Instalação de software</td><td><span class="badge info">Não necessário</span></td><td>Abre diretamente no browser</td></tr>
+    </table>
+
+    <h3>Versão Local</h3>
+    <table>
+      <tr><th>Requisito</th><th>Versão mínima</th><th>Como obter</th></tr>
+      <tr><td><strong>Node.js</strong></td><td>v18 ou superior</td><td><a href="https://nodejs.org/pt" target="_blank">nodejs.org/pt</a> → LTS</td></tr>
+      <tr><td><strong>npm</strong></td><td>Incluído com Node.js</td><td>Instalado automaticamente com Node.js</td></tr>
+      <tr><td><strong>Chave API OpenWeather</strong></td><td>Plano gratuito</td><td>Já incluída no ficheiro <code>.env</code></td></tr>
+      <tr><td><strong>Sistema operativo</strong></td><td>Qualquer</td><td>Windows, macOS, Linux</td></tr>
+      <tr><td><strong>Ligação à internet</strong></td><td>Ativa durante uso</td><td>Para obter dados meteorológicos em tempo real</td></tr>
+    </table>
+
+    <div class="callout info">
+      <div class="callout-title">ℹ️ Dependências Node.js</div>
+      O projeto usa três pacotes: <code>express</code> (servidor web), <code>cors</code> (segurança cross-origin) e <code>dotenv</code> (leitura do ficheiro .env). São instalados automaticamente com <code>npm install</code>.
+    </div>
+  </div>
+
+  <!-- ── 4. NOTA EXECUTIVA ── -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <div class="section-title">Nota Executiva — Evolução e Correções</div>
+    </div>
+
+    <h3>Ponto de partida</h3>
+    <p>O projeto foi iniciado como um widget meteorológico simples para Tavira. A arquitetura escolhida — servidor Node.js local como proxy — permite proteger a chave API e fazer chamadas a múltiplas fontes de dados externas sem expor credenciais no browser.</p>
+
+    <h3>Evolução do projeto</h3>
+    <table>
+      <tr><th>Fase</th><th>O que foi feito</th></tr>
+      <tr><td>Fase 1 — Base</td><td>Servidor Express com endpoints <code>/api/weather</code> e <code>/api/widget-data</code>; widget com temperatura do ar e do mar; dashboard com pesquisa de cidades</td></tr>
+      <tr><td>Fase 2 — Estabilidade</td><td>Identificação e correção de bugs críticos (ver tabela abaixo); implementação de mecanismos de timeout e proteção de erros</td></tr>
+      <tr><td>Fase 3 — Deploy</td><td>Publicação online no Railway com variável de ambiente segura; repositório GitHub; documentação</td></tr>
+    </table>
+
+    <h3>Bugs identificados e correções aplicadas</h3>
+    <table>
+      <tr><th>Bug</th><th>Impacto</th><th>Correção</th><th>Estado</th></tr>
+      <tr>
+        <td>Servidor sem timeout nas chamadas às APIs externas</td>
+        <td>Servidor podia ficar "pendurado" indefinidamente se a API não respondesse, tornando a aplicação inacessível</td>
+        <td>Implementado <code>AbortController</code> com timeout de 8 segundos em todas as chamadas externas. Erros de timeout distinguidos de outros erros</td>
+        <td><span class="badge fixed">✔ Corrigido</span></td>
+      </tr>
+      <tr>
+        <td>Data do dashboard no fuso horário local do computador</td>
+        <td>Utilizadores fora de Portugal (UTC+1) viam o dia errado — ex: mostrava "Quarta" quando era "Quinta"</td>
+        <td>Substituído <code>.getDay()/.getDate()/.getMonth()</code> por <code>.getUTCDay()/.getUTCDate()/.getUTCMonth()</code> após ajuste correto do offset</td>
+        <td><span class="badge fixed">✔ Corrigido</span></td>
+      </tr>
+      <tr>
+        <td>Ícones meteorológicos errados para névoa/neblina</td>
+        <td>Condições de nevoeiro (códigos OpenWeather 700-799) mostravam o ícone de nuvens em vez do correto</td>
+        <td>Reordenamento da função <code>codeToIcon()</code> — o bloco 700-799 estava após o bloco 803+ e nunca era alcançado (código "unreachable")</td>
+        <td><span class="badge fixed">✔ Corrigido</span></td>
+      </tr>
+      <tr>
+        <td>Agrupamento de dias da previsão semanal pelo fuso local</td>
+        <td>À meia-noite, o mesmo dia podia ser dividido em dois grupos diferentes, gerando dias duplicados ou ausentes na previsão</td>
+        <td>Agrupamento alterado para usar <code>getUTCFullYear/Month/Date</code> — consistente com o timezone da localização meteorológica</td>
+        <td><span class="badge fixed">✔ Corrigido</span></td>
+      </tr>
+      <tr>
+        <td>Dia da semana no widget com timezone local</td>
+        <td>Função <code>fmtDay()</code> interpretava datas no fuso horário do sistema. Utilizadores fora de Portugal podiam ver o dia errado</td>
+        <td>Adicionado sufixo <code>Z</code> ao parsing da data (<code>T12:00:00Z</code>) para forçar interpretação UTC</td>
+        <td><span class="badge fixed">✔ Corrigido</span></td>
+      </tr>
+      <tr>
+        <td>Sem validação da resposta OpenWeather antes de parsear</td>
+        <td>Se a API devolvesse erro 401/429, o servidor tentava aceder a <code>current.main.temp</code> e crashava internamente com TypeError</td>
+        <td>Adicionada verificação <code>.ok</code> antes de aceder aos dados, com mensagem de erro clara em português</td>
+        <td><span class="badge fixed">✔ Corrigido</span></td>
+      </tr>
+      <tr>
+        <td>Código de embed com URL placeholder</td>
+        <td>O botão "Copiar código" copiava <code>SEU-DOMINIO</code> em vez do URL real — código copiado não funcionava</td>
+        <td>URL real do Railway inserido; adicionado fallback com <code>prompt()</code> para browsers que bloqueiam a clipboard API</td>
+        <td><span class="badge fixed">✔ Corrigido</span></td>
+      </tr>
+    </table>
+
+    <h3>Estado atual</h3>
+    <div class="callout success">
+      <div class="callout-title">✅ Programa estável</div>
+      Todos os bugs críticos identificados foram corrigidos. O servidor tem proteção de timeout em todos os pontos de falha. Os dados apresentados são fiáveis. A versão online está em produção no Railway e acessível a qualquer utilizador com browser e internet.
+    </div>
+
+    <h3>Limitações conhecidas (não críticas)</h3>
+    <ul>
+      <li><strong>Plano Railway gratuito</strong> — o servidor "adormece" após inatividade; a primeira visita após inatividade pode demorar 10-15 segundos</li>
+      <li><strong>Chave API OpenWeather gratuita</strong> — limite de 1.000 chamadas/dia; para uso académico é mais do que suficiente</li>
+      <li><strong>Temperatura da água</strong> — depende da disponibilidade da API Open-Meteo Marine; pode mostrar "—" em determinados períodos</li>
+      <li><strong>Previsão semanal</strong> — baseia-se na API gratuita Open-Meteo (7 dias); o dashboard usa a OpenWeather que limita a 5 dias no plano gratuito</li>
+    </ul>
+
+    <h3>Possíveis melhorias futuras</h3>
+    <ul>
+      <li>Cache no servidor para reduzir chamadas às APIs e acelerar respostas</li>
+      <li>Suporte a mais cidades/localizações no widget (atualmente fixo em Tavira)</li>
+      <li>Notificações de condições extremas (tempestade, calor excessivo)</li>
+      <li>Gráfico de temperatura das últimas 24h</li>
+    </ul>
+  </div>
+
+  <!-- ── RODAPÉ ── -->
+  <div style="border-top:2px solid var(--gray-200);margin-top:16px;padding-top:24px;font-size:0.82rem;color:var(--gray-400);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+    <span>Weather Tavira · Documentação v1.0 · Julho 2026</span>
+    <span>Desenvolvido com Antigravity AI · Dados: OpenWeather · Open-Meteo</span>
+  </div>
+
+</div>
+</body>
+</html>
