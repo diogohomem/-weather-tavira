@@ -376,8 +376,8 @@
 
     <div class="embed-box">
       <p class="embed-box__label">Código de embed</p>
-      <pre class="embed-box__code">&lt;iframe
-  src="https://SEU-DOMINIO/widget.html"
+      <pre class="embed-box__code" id="embed-code-display">&lt;iframe
+  src="https://web-production-9aff6.up.railway.app/widget.html"
   width="320" height="520"
   style="border:none;border-radius:16px"
   loading="lazy"&gt;&lt;/iframe&gt;</pre>
@@ -386,11 +386,17 @@
   </main>
 
   <script>
+    // Use the real production URL for the embed code
+    const WIDGET_URL = 'https://web-production-9aff6.up.railway.app/widget.html';
+
     function copyEmbed(btn) {
-      const code = '<iframe\n  src="https://SEU-DOMINIO/widget.html"\n  width="320" height="520"\n  style="border:none;border-radius:16px"\n  loading="lazy"></iframe>';
+      const code = `<iframe\n  src="${WIDGET_URL}"\n  width="320" height="520"\n  style="border:none;border-radius:16px"\n  loading="lazy"></iframe>`;
       navigator.clipboard.writeText(code).then(() => {
         btn.textContent = '✓ Copiado!';
         setTimeout(() => btn.textContent = 'Copiar código', 2000);
+      }).catch(() => {
+        // Fallback for browsers that block clipboard
+        prompt('Copia este código:', code);
       });
     }
   </script>
