@@ -111,6 +111,18 @@ app.get('/api/widget-data', async (req, res) => {
       forecastRes.json()
     ]);
 
+    // Guard: if OpenWeather returned an error body, fail fast with a clear message
+    if (!currentRes.ok) {
+      return res.status(currentRes.status).json({
+        error: `Erro da API meteorológica: ${current.message || currentRes.statusText}`
+      });
+    }
+    if (!forecastRes.ok) {
+      return res.status(forecastRes.status).json({
+        error: `Erro na previsão: ${forecast.message || forecastRes.statusText}`
+      });
+    }
+
     res.json({
       airTemp: Math.round(current.main.temp),
       feelsLike: Math.round(current.main.feels_like),
