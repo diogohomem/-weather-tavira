@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather Tavira - Painel de Meteorologia</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons for modern symbols -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Back link -->
+  <a href="/" style="position:fixed;top:12px;left:16px;z-index:9999;font-family:system-ui,sans-serif;font-size:0.75rem;color:rgba(255,255,255,0.55);background:rgba(0,0,0,0.3);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:5px 10px;text-decoration:none;display:flex;align-items:center;gap:5px;transition:all 0.18s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.55)'">
+    ← Início
+  </a>
+
+  <div class="background-overlay"></div>
+  
+  <div class="app-container">
+    <header class="app-header">
+      <div class="logo">
+        <i class="fa-solid fa-cloud-sun-rain logo-icon"></i>
+        <h1>Weather<span>Tavira</span></h1>
+      </div>
+      
+      <div class="search-box">
+        <form id="search-form" onsubmit="event.preventDefault();">
+          <div class="search-input-wrapper">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input type="text" id="search-input" placeholder="Pesquisar cidade..." autocomplete="off">
+            <button type="submit" id="search-btn">Buscar</button>
+          </div>
+        </form>
+      </div>
+    </header>
+
+    <main class="main-layout">
+      <!-- Left side: Current Weather and Highlights -->
+      <section class="current-weather-section">
+        <!-- Error Message -->
+        <div id="error-message" class="error-card hidden">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <p id="error-text">Cidade não encontrada. Tente novamente.</p>
+          <button id="error-close-btn">&times;</button>
+        </div>
+
+        <!-- Glass Weather Card -->
+        <div id="weather-card" class="weather-card loading">
+          <!-- Loading State -->
+          <div class="card-loader">
+            <div class="spinner"></div>
+            <p>A carregar meteorologia...</p>
+          </div>
+
+          <!-- Main Info -->
+          <div class="weather-main-info">
+            <div class="location-datetime">
+              <h2 id="city-name">Tavira, PT</h2>
+              <p id="current-date">Segunda-feira, 29 Junho</p>
+            </div>
+            
+            <div class="temperature-container">
+              <div class="temp-val-wrapper">
+                <span id="temp-val">--</span><span class="unit">°C</span>
+              </div>
+              <div class="weather-desc-wrapper">
+                <img id="weather-icon" src="" alt="Weather Icon" class="weather-icon-img hidden">
+                <span id="weather-desc">A obter dados...</span>
+              </div>
+            </div>
+
+            <div class="temp-limits">
+              <span><i class="fa-solid fa-arrow-up"></i> Máx: <span id="temp-max">--</span>°C</span>
+              <span class="separator">|</span>
+              <span><i class="fa-solid fa-arrow-down"></i> Mín: <span id="temp-min">--</span>°C</span>
+            </div>
+          </div>
+
+          <!-- Grid of weather stats -->
+          <div class="weather-stats-grid">
+            <div class="stat-item">
+              <div class="stat-icon-wrapper humidity">
+                <i class="fa-solid fa-droplet"></i>
+              </div>
+              <div class="stat-info">
+                <span class="stat-label">Humidade</span>
+                <span class="stat-value" id="humidity-val">-- %</span>
+              </div>
+            </div>
+
+            <div class="stat-item">
+              <div class="stat-icon-wrapper wind">
+                <i class="fa-solid fa-wind"></i>
+              </div>
+              <div class="stat-info">
+                <span class="stat-label">Vento</span>
+                <span class="stat-value" id="wind-val">-- km/h</span>
+              </div>
+            </div>
+
+            <div class="stat-item">
+              <div class="stat-icon-wrapper thermal">
+                <i class="fa-solid fa-temperature-half"></i>
+              </div>
+              <div class="stat-info">
+                <span class="stat-label">Sensação</span>
+                <span class="stat-value" id="feels-like-val">-- °C</span>
+              </div>
+            </div>
+
+            <div class="stat-item">
+              <div class="stat-icon-wrapper pressure">
+                <i class="fa-solid fa-gauge"></i>
+              </div>
+              <div class="stat-info">
+                <span class="stat-label">Pressão</span>
+                <span class="stat-value" id="pressure-val">-- hPa</span>
+              </div>
+            </div>
+
+            <div class="stat-item">
+              <div class="stat-icon-wrapper sea">
+                <i class="fa-solid fa-water"></i>
+              </div>
+              <div class="stat-info">
+                <span class="stat-label">Temp. Água</span>
+                <span class="stat-value" id="sea-temp-val">-- °C</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right side: Forecasts (Hourly and 5-Day) -->
+      <section class="forecast-section">
+        <!-- Hourly Forecast -->
+        <div class="forecast-card hourly-card">
+          <h3>Previsão Hoje (3 em 3h)</h3>
+          <div class="hourly-list" id="hourly-list">
+            <!-- Dynamically populated -->
+            <div class="skeleton-item"></div>
+            <div class="skeleton-item"></div>
+            <div class="skeleton-item"></div>
+            <div class="skeleton-item"></div>
+          </div>
+        </div>
+
+        <!-- 5-Day Forecast -->
+        <div class="forecast-card weekly-card">
+          <h3>Previsão para 5 Dias</h3>
+          <div class="weekly-list" id="weekly-list">
+            <!-- Dynamically populated -->
+            <div class="skeleton-row"></div>
+            <div class="skeleton-row"></div>
+            <div class="skeleton-row"></div>
+            <div class="skeleton-row"></div>
+            <div class="skeleton-row"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="app-footer">
+      <p>Desenvolvido com <i class="fa-solid fa-heart pulse-icon"></i> por Antigravity. Dados da OpenWeather API.</p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

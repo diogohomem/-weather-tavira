@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather Tavira</title>
+
+  <!-- Smart launcher: test server, redirect or show help -->
+  <script>
+    if (window.location.protocol === 'file:') {
+      fetch('http://localhost:3000', { mode: 'no-cors' })
+        .then(() => { window.location.replace('http://localhost:3000'); })
+        .catch(() => {
+          // Server not reachable — show a clear, general help page
+          document.addEventListener('DOMContentLoaded', () => {
+            document.body.innerHTML = `
+              <style>
+                @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+                * { box-sizing: border-box; margin: 0; padding: 0; }
+                body {
+                  font-family: 'Outfit', system-ui, sans-serif;
+                  background: linear-gradient(135deg, #0f0c29 0%, #1a1f3c 50%, #0d1b2a 100%);
+                  min-height: 100vh;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  color: #fff;
+                  padding: 24px;
+                }
+                .card {
+                  background: rgba(255,255,255,0.05);
+                  border: 1px solid rgba(255,255,255,0.12);
+                  border-radius: 24px;
+                  padding: 48px 44px;
+                  max-width: 600px;
+                  width: 100%;
+                  backdrop-filter: blur(16px);
+                  box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+                }
+                .header { text-align: center; margin-bottom: 36px; }
+                .badge {
+                  display: inline-flex;
+                  align-items: center;
+                  gap: 8px;
+                  background: rgba(251,191,36,0.15);
+                  border: 1px solid rgba(251,191,36,0.35);
+                  color: #fbbf24;
+                  font-size: 0.78rem;
+                  font-weight: 600;
+                  letter-spacing: 0.08em;
+                  text-transform: uppercase;
+                  padding: 6px 14px;
+                  border-radius: 999px;
+                  margin-bottom: 20px;
+                }
+                .badge::before { content: '●'; font-size: 0.6rem; }
+                h1 { font-size: 1.7rem; font-weight: 700; margin-bottom: 10px; line-height: 1.2; }
+                .subtitle { color: rgba(255,255,255,0.5); font-size: 0.95rem; line-height: 1.6; }
+                .what-is {
+                  background: rgba(79,142,247,0.08);
+                  border: 1px solid rgba(79,142,247,0.2);
+                  border-radius: 14px;
+                  padding: 18px 20px;
+                  margin-bottom: 28px;
+                  font-size: 0.9rem;
+                  color: rgba(255,255,255,0.7);
+                  line-height: 1.65;
+                }
+                .what-is strong { color: #7dd3fc; font-weight: 600; }
+                .steps-title {
+                  font-size: 0.72rem;
+                  font-weight: 600;
+                  text-transform: uppercase;
+                  letter-spacing: 0.1em;
+                  color: rgba(255,255,255,0.3);
+                  margin-bottom: 14px;
+                }
+                .steps { display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
+                .step {
+                  display: flex;
+                  align-items: flex-start;
+                  gap: 16px;
+                  background: rgba(255,255,255,0.04);
+                  border: 1px solid rgba(255,255,255,0.07);
+                  border-radius: 12px;
+                  padding: 14px 16px;
+                }
+                .step-num {
+                  background: linear-gradient(135deg, #4f8ef7, #6c63ff);
+                  color: #fff;
+                  font-weight: 700;
+                  font-size: 0.8rem;
+                  border-radius: 50%;
+                  min-width: 28px;
+                  height: 28px;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  flex-shrink: 0;
+                }
+                .step-body { line-height: 1.55; font-size: 0.9rem; }
+                .step-body strong { display: block; margin-bottom: 3px; color: #fff; font-weight: 600; }
+                .step-body span { color: rgba(255,255,255,0.55); font-size: 0.87rem; }
+                code {
+                  background: rgba(109,99,255,0.2);
+                  border: 1px solid rgba(109,99,255,0.3);
+                  border-radius: 6px;
+                  padding: 2px 9px;
+                  font-family: 'Courier New', monospace;
+                  font-size: 0.88rem;
+                  color: #c4b5fd;
+                }
+                .actions { display: flex; flex-direction: column; gap: 12px; align-items: center; }
+                .btn-primary {
+                  display: inline-flex;
+                  align-items: center;
+                  gap: 8px;
+                  background: linear-gradient(135deg, #4f8ef7, #6c63ff);
+                  color: #fff;
+                  font-family: 'Outfit', sans-serif;
+                  font-weight: 600;
+                  font-size: 0.95rem;
+                  padding: 13px 32px;
+                  border-radius: 12px;
+                  border: none;
+                  cursor: pointer;
+                  text-decoration: none;
+                  transition: opacity 0.2s, transform 0.15s;
+                  width: 100%;
+                  justify-content: center;
+                }
+                .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+                .btn-secondary {
+                  display: inline-flex;
+                  align-items: center;
+                  gap: 8px;
+                  background: rgba(255,255,255,0.06);
+                  border: 1px solid rgba(255,255,255,0.12);
+                  color: rgba(255,255,255,0.65);
+                  font-family: 'Outfit', sans-serif;
+                  font-size: 0.88rem;
+                  padding: 11px 24px;
+                  border-radius: 10px;
+                  cursor: pointer;
+                  text-decoration: none;
+                  transition: background 0.2s;
+                  width: 100%;
+                  justify-content: center;
+                }
+                .btn-secondary:hover { background: rgba(255,255,255,0.1); color: #fff; }
+                .note {
+                  margin-top: 24px;
+                  padding: 14px 16px;
+                  background: rgba(255,255,255,0.03);
+                  border-radius: 10px;
+                  font-size: 0.82rem;
+                  color: rgba(255,255,255,0.35);
+                  text-align: center;
+                  line-height: 1.6;
+                }
+                .note a { color: rgba(167,139,250,0.7); text-decoration: none; }
+                .note a:hover { color: #a78bfa; text-decoration: underline; }
+              </style>
+              <div class="card">
+                <div class="header">
+                  <div class="badge">Servidor não iniciado</div>
+                  <h1>🌤️ Weather Tavira</h1>
+                  <p class="subtitle">O servidor local não está em execução. Segue os passos abaixo para iniciar a aplicação.</p>
+                </div>
+
+                <div class="what-is">
+                  <strong>ℹ️ Como funciona esta aplicação?</strong><br>
+                  O Weather Tavira é um widget meteorológico que obtém dados em tempo real através de um <strong>servidor local</strong> (Node.js + Express). Este servidor faz a ponte entre o browser e as APIs de meteorologia, protegendo a tua chave API. Tens de o <strong>iniciar manualmente</strong> antes de usar a aplicação.
+                </div>
+
+                <p class="steps-title">Para iniciar o servidor</p>
+                <div class="steps">
+                  <div class="step">
+                    <div class="step-num">1</div>
+                    <div class="step-body">
+                      <strong>Abre o Terminal na pasta do projeto</strong>
+                      <span>Mac: clique com o botão direito na pasta do projeto → <em>"Novo Terminal na Pasta"</em></span>
+                    </div>
+                  </div>
+                  <div class="step">
+                    <div class="step-num">2</div>
+                    <div class="step-body">
+                      <strong>Inicia o servidor</strong>
+                      <span>Escreve no Terminal: <code>npm run dev</code> — o browser abre automaticamente em <code>http://localhost:3000</code></span>
+                    </div>
+                  </div>
+                  <div class="step">
+                    <div class="step-num">3</div>
+                    <div class="step-body">
+                      <strong>Deixa o Terminal aberto</strong>
+                      <span>O servidor fica ativo enquanto o Terminal estiver em execução. Fecha-o apenas quando terminares.</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="actions">
+                  <button class="btn-primary" onclick="window.location.replace('http://localhost:3000')">
+                    ↻ &nbsp;Já iniciei o servidor — tentar novamente
+                  </button>
+                  <a class="btn-secondary" href="https://nodejs.org/pt" target="_blank">
+                    ⬇ &nbsp;Ainda não tenho o Node.js — descarregar
+                  </a>
+                </div>
+
+                <p class="note">
+                  Erro inesperado? Garante que o ficheiro <code>.env</code> existe na raiz do projeto<br>
+                  com a tua chave API: <code>OPENWEATHER_API_KEY=a_tua_chave</code>
+                </p>
+              </div>`;
+          });
+        });
+    }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --dark  : #1A1F2E;
+      --darker: #141826;
+      --accent: #4f8ef7;
+      --sand  : #FAF5EC;
+    }
+
+    html, body {
+      min-height: 100vh;
+      font-family: 'Outfit', system-ui, sans-serif;
+      background: var(--dark);
+      color: #fff;
+    }
+
+    /* ── Top nav ── */
+    .top-nav {
+      height         : 52px;
+      background     : var(--darker);
+      border-bottom  : 1px solid rgba(255,255,255,0.06);
+      display        : flex;
+      align-items    : center;
+      justify-content: space-between;
+      padding        : 0 24px;
+      position       : sticky;
+      top            : 0;
+      z-index        : 10;
+    }
+
+    .nav-logo {
+      display    : flex;
+      align-items: center;
+      gap        : 8px;
+      font-size  : 0.92rem;
+      font-weight: 600;
+      color      : #fff;
+      letter-spacing: 0.01em;
+    }
+
+    .nav-btn {
+      font-family  : 'Outfit', system-ui, sans-serif;
+      font-size    : 0.82rem;
+      font-weight  : 500;
+      color        : #fff;
+      background   : var(--accent);
+      border       : none;
+      border-radius: 8px;
+      padding      : 7px 16px;
+      cursor       : pointer;
+      text-decoration: none;
+      display      : inline-flex;
+      align-items  : center;
+      gap          : 6px;
+      transition   : opacity 0.18s;
+    }
+    .nav-btn:hover { opacity: 0.85; }
+
+    /* ── Main content ── */
+    .main {
+      min-height     : calc(100vh - 52px);
+      display        : flex;
+      flex-direction : column;
+      align-items    : center;
+      justify-content: center;
+      padding        : 40px 20px;
+      gap            : 24px;
+    }
+
+    .main__label {
+      font-family   : 'Cormorant Garamond', Georgia, serif;
+      font-size     : 1rem;
+      font-style    : italic;
+      color         : rgba(255,255,255,0.40);
+      letter-spacing: 0.04em;
+      text-align    : center;
+    }
+
+    /* ── Widget iframe container ── */
+    .widget-wrap {
+      width        : 320px;
+      height       : 520px;
+      border-radius: 16px;
+      overflow     : hidden;
+      box-shadow   : 0 12px 48px rgba(0,0,0,0.55), 0 2px 12px rgba(0,0,0,0.3);
+    }
+    .widget-wrap iframe {
+      width : 100%;
+      height: 100%;
+      border: none;
+      display: block;
+      background: #fff;
+    }
+
+    /* ── Embed snippet ── */
+    .embed-box {
+      background   : rgba(255,255,255,0.04);
+      border       : 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding      : 14px 18px;
+      width        : 320px;
+    }
+    .embed-box__label {
+      font-size     : 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color         : rgba(255,255,255,0.30);
+      margin-bottom : 6px;
+    }
+    .embed-box__code {
+      font-family: 'Courier New', monospace;
+      font-size  : 0.7rem;
+      color      : rgba(255,255,255,0.50);
+      white-space: pre;
+      overflow-x : auto;
+      line-height: 1.6;
+    }
+    .embed-copy {
+      margin-top  : 8px;
+      font-family : 'Outfit', system-ui, sans-serif;
+      font-size   : 0.72rem;
+      color       : var(--accent);
+      background  : none;
+      border      : none;
+      cursor      : pointer;
+      padding     : 0;
+    }
+    .embed-copy:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <!-- Top navigation -->
+  <nav class="top-nav">
+    <div class="nav-logo">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4f8ef7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v2M4.93 4.93l1.41 1.41M20 12h2M19.07 4.93l-1.41 1.41M15.947 12.65a4 4 0 0 0-5.925-4.128"/><path d="M13 22H7a5 5 0 1 1 4.9-6H13a3 3 0 0 1 0 6z"/></svg>
+      Weather Tavira
+    </div>
+    <a class="nav-btn" href="/dashboard.html">
+      Dashboard Completo
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </nav>
+
+  <!-- Widget showcase -->
+  <main class="main">
+    <p class="main__label">Widget Embed — Condições em Tavira</p>
+
+    <div class="widget-wrap">
+      <iframe src="/widget.html" title="Weather Widget Tavira" loading="eager"></iframe>
+    </div>
+
+    <div class="embed-box">
+      <p class="embed-box__label">Código de embed</p>
+      <pre class="embed-box__code">&lt;iframe
+  src="https://SEU-DOMINIO/widget.html"
+  width="320" height="520"
+  style="border:none;border-radius:16px"
+  loading="lazy"&gt;&lt;/iframe&gt;</pre>
+      <button class="embed-copy" onclick="copyEmbed(this)">Copiar código</button>
+    </div>
+  </main>
+
+  <script>
+    function copyEmbed(btn) {
+      const code = '<iframe\n  src="https://SEU-DOMINIO/widget.html"\n  width="320" height="520"\n  style="border:none;border-radius:16px"\n  loading="lazy"></iframe>';
+      navigator.clipboard.writeText(code).then(() => {
+        btn.textContent = '✓ Copiado!';
+        setTimeout(() => btn.textContent = 'Copiar código', 2000);
+      });
+    }
+  </script>
+
+</body>
+</html>

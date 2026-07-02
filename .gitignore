@@ -1,0 +1,12 @@
+# Variáveis de ambiente — NUNCA enviar para GitHub (contém API key)
+.env
+
+# Dependências Node.js (reinstaladas automaticamente no deploy)
+node_modules/
+
+# Ficheiros do sistema macOS
+.DS_Store
+
+# Logs
+*.log
+npm-debug.log*
